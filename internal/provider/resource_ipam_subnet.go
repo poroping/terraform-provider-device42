@@ -432,7 +432,7 @@ func resourceIpamSubnetDelete(ctx context.Context, d *schema.ResourceData, meta 
 	}
 
 	if !b {
-		return diag.Errorf("error deleting IPAM subnet.", err)
+		return diag.Errorf("error deleting IPAM subnet.")
 	}
 
 	d.SetId("")

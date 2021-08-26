@@ -327,7 +327,7 @@ func resourceIpamVlanDelete(ctx context.Context, d *schema.ResourceData, meta in
 	}
 
 	if !b {
-		return diag.Errorf("error deleting IPAM vlan.", err)
+		return diag.Errorf("error deleting IPAM vlan.")
 	}
 
 	d.SetId("")
