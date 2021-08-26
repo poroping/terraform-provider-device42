@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/poroping/libdevice42/client"
 )
 
 func init() {
@@ -26,11 +27,35 @@ func init() {
 func New(version string) func() *schema.Provider {
 	return func() *schema.Provider {
 		p := &schema.Provider{
+			Schema: map[string]*schema.Schema{
+				"host": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					DefaultFunc: schema.EnvDefaultFunc("TF_DEVICE42_HOST", nil),
+				},
+				"username": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					DefaultFunc: schema.EnvDefaultFunc("TF_DEVICE42_USERNAME", nil),
+				},
+				"password": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Sensitive:   true,
+					DefaultFunc: schema.EnvDefaultFunc("TF_DEVICE42_PASSWORD", nil),
+				},
+				"insecure": {
+					Type:     schema.TypeBool,
+					Optional: true,
+					Default:  false,
+				},
+			},
 			DataSourcesMap: map[string]*schema.Resource{
-				"scaffolding_data_source": dataSourceScaffolding(),
+				"device42_ipam_subnet": dataSourceIpamSubnet(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
-				"scaffolding_resource": resourceScaffolding(),
+				"device42_ipam_subnet": resourceIpamSubnet(),
+				"device42_ipam_vlan":   resourceIpamVlan(),
 			},
 		}
 
@@ -40,18 +65,26 @@ func New(version string) func() *schema.Provider {
 	}
 }
 
-type apiClient struct {
-	// Add whatever fields, client or connection info, etc. here
-	// you would need to setup to communicate with the upstream
-	// API.
-}
+// type apiClient struct {
+// 	// Add whatever fields, client or connection info, etc. here
+// 	// you would need to setup to communicate with the upstream
+// 	// API.
+// }
 
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
-	return func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
-		// Setup a User-Agent for your API client (replace the provider name for yours):
-		// userAgent := p.UserAgent("terraform-provider-scaffolding", version)
-		// TODO: myClient.UserAgent = userAgent
+	return func(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+		username := d.Get("username").(string)
+		password := d.Get("password").(string)
+		host := d.Get("host").(string)
+		insecure := d.Get("insecure").(bool)
+		userAgent := p.UserAgent("terraform-provider-device42", version)
+		var diags diag.Diagnostics
+		c := client.NewHTTPClientWithConfigAndAuth(nil, &client.TransportConfig{
+			Host:     host,
+			BasePath: "/",
+			Schemes:  []string{"https"},
+		}, username, password, userAgent, insecure)
 
-		return &apiClient{}, nil
+		return c, diags
 	}
 }
