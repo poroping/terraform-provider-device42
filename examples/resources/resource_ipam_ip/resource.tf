@@ -6,7 +6,7 @@ resource "device42_ipam_subnet" "example" {
 }
 
 resource "device42_ipam_ip" "example" {
-  subnet_id = "1312"
+  subnet_id = device42_ipam_subnet.example.subnet_id
   ipaddress = "10.25.0.1"
   notes     = "server1.example.com"
 }
@@ -16,7 +16,7 @@ output "example" {
 }
 
 resource "device42_ipam_ip" "example2" {
-  subnet_id  = "1312"
+  subnet_id  = device42_ipam_subnet.example.subnet_id
   suggest_ip = true
   notes      = "server2.example2.com"
 }
