@@ -1,5 +1,5 @@
 data "device42_ipam_subnet" "example" {
-  subnet_id = "1321"
+  subnet_id = "1"
 }
 
 output "example" {
