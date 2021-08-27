@@ -73,7 +73,7 @@ func resourceIpamIPCreate(ctx context.Context, d *schema.ResourceData, meta inte
 	if d.Get("suggest_ip").(bool) {
 		err, ip := ipamSuggestIP(ctx, d, meta)
 		if err != nil {
-			return diag.Errorf("error suggesting IP. %s", err)
+			return err
 		}
 		params.Ipaddress = *ip
 	}
@@ -121,7 +121,7 @@ func ipamSuggestIP(ctx context.Context, d *schema.ResourceData, meta interface{}
 	resp, err := client.IPam.GetIPAMSuggestIP(params)
 
 	if err != nil {
-		return diag.Errorf("error reading response. %s", err), nil
+		return diag.Errorf("error reading suggest IP response. %s", err), nil
 	}
 
 	ip := resp.Payload.IP.(string)
