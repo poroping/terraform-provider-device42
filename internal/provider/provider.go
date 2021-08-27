@@ -54,6 +54,7 @@ func New(version string) func() *schema.Provider {
 				"device42_ipam_subnet": dataSourceIpamSubnet(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
+				"device42_ipam_ip":     resourceIpamIP(),
 				"device42_ipam_subnet": resourceIpamSubnet(),
 				"device42_ipam_vlan":   resourceIpamVlan(),
 			},
