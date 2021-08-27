@@ -52,11 +52,11 @@ func resourceIpamVlan() *schema.Resource {
 			// 	Type:        schema.TypeString,
 			// 	Optional:    true,
 			// },
-			// "tags_and": {
-			// 	Description: "Tags (AND).",
-			// 	Type:        schema.TypeString,
-			// 	Optional:    true,
-			// },
+			"tags_and": {
+				Description: "Tags (AND).",
+				Type:        schema.TypeString,
+				Optional:    true,
+			},
 			"vlan_id": {
 				Description: "VLAN ID.",
 				Type:        schema.TypeString,
@@ -67,7 +67,7 @@ func resourceIpamVlan() *schema.Resource {
 				Description:   "Use to create vlan from a range of vlans.",
 				Type:          schema.TypeString,
 				Optional:      true,
-				RequiredWith:  []string{"tags", "name"},
+				RequiredWith:  []string{"tags_and", "name"},
 				ConflictsWith: []string{"number"},
 				ValidateFunc:  validation.StringMatch(validateRegExpVlanRange(), "Provide valid VLAN range"),
 			},
@@ -208,7 +208,7 @@ func ipamVlansCheckExist(ctx context.Context, d *schema.ResourceData, meta inter
 		}
 	}
 
-	if v, ok := d.GetOk("tags"); ok {
+	if v, ok := d.GetOk("tags_and"); ok {
 		if s, ok := v.(string); ok {
 			params.TagsAnd = &s
 		}
