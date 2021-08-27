@@ -52,8 +52,13 @@ func resourceIpamVlan() *schema.Resource {
 			// 	Type:        schema.TypeString,
 			// 	Optional:    true,
 			// },
-			"tags_and": {
-				Description: "Tags (AND).",
+			"tags_exist": {
+				Description: "Tags (AND) - used for filtering with `check_if_exists`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+			},
+			"tags_range": {
+				Description: "Tags (AND) - used for filtering with `create_within_range`.",
 				Type:        schema.TypeString,
 				Optional:    true,
 			},
@@ -67,7 +72,7 @@ func resourceIpamVlan() *schema.Resource {
 				Description:   "Use to create vlan from a range of vlans.",
 				Type:          schema.TypeString,
 				Optional:      true,
-				RequiredWith:  []string{"tags_and", "name"},
+				RequiredWith:  []string{"tags_range", "name"},
 				ConflictsWith: []string{"number"},
 				ValidateFunc:  validation.StringMatch(validateRegExpVlanRange(), "Provide valid VLAN range"),
 			},
@@ -116,11 +121,13 @@ func resourceIpamVlanCreate(ctx context.Context, d *schema.ResourceData, meta in
 			params.Name = &s
 		}
 	}
+
 	if v, ok := d.GetOk("number"); ok {
 		if s, ok := v.(string); ok {
 			params.Number = s
 		}
 	}
+
 	if v, ok := d.GetOk("tags"); ok {
 		if s, ok := v.(string); ok {
 			params.Tags = &s
@@ -150,9 +157,9 @@ func ipamVlanFromRange(ctx context.Context, d *schema.ResourceData, meta interfa
 
 	params := ipam.NewGetIPAMvlansParams()
 
-	if v, ok := d.GetOk("tags"); ok {
+	if v, ok := d.GetOk("tags_range"); ok {
 		if s, ok := v.(string); ok {
-			params.Tags = &s
+			params.TagsAnd = &s
 		}
 	}
 
@@ -208,7 +215,7 @@ func ipamVlansCheckExist(ctx context.Context, d *schema.ResourceData, meta inter
 		}
 	}
 
-	if v, ok := d.GetOk("tags_and"); ok {
+	if v, ok := d.GetOk("tags_exist"); ok {
 		if s, ok := v.(string); ok {
 			params.TagsAnd = &s
 		}
