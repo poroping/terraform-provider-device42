@@ -48,7 +48,7 @@ output "example" {
 * `create_from_parent` - Use to create subnet from parent.
 * `check_if_exists` - Use to check if subnet exists already.
 
-If addition to above the resource exports the following attributes:
+In addition to above the resource exports the following attributes:
 
 ## Attribute Reference
 

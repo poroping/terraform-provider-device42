@@ -65,7 +65,7 @@ output "debug3" {
 * `create_within_range` - Use to create vlan from a range of vlans. 
 * `check_if_exists` - Use to check if vlan exists already.
 
-If addition to above the resource exports the following attributes:
+In addition to above the resource exports the following attributes:
 
 ## Attribute Reference
 
