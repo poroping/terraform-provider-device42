@@ -14,7 +14,9 @@ func TestIsFakeListEqual(t *testing.T) {
 		{"a,b,c", "a,c,b", true},
 		{"a,b,c", "d,e,f", false},
 		{"a,b,c", "", false},
-		{"", "a,b,c", false}}
+		{"", "a,b,c", false},
+		{"a,,b", "a,b", true},
+	}
 
 	for i, tt := range tests {
 		testname := fmt.Sprintf("Testing comma separated 'list' equality, %v", i)
