@@ -1,3 +1,4 @@
-## 0.1.0 (Unreleased)
+## 0.0.5 
 
-BACKWARDS INCOMPATIBILITIES / NOTES:
+### New Features
+- Added diffsuppress for comma separated lists. (tags)

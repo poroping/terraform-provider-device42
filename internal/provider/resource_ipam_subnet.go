@@ -85,10 +85,11 @@ func resourceIpamSubnet() *schema.Resource {
 				Optional:    true,
 			},
 			"tags": {
-				Description: "Tags.",
-				Type:        schema.TypeString,
-				Computed:    true,
-				Optional:    true,
+				Description:      "Tags.",
+				Type:             schema.TypeString,
+				Computed:         true,
+				Optional:         true,
+				DiffSuppressFunc: diffFakeListEqual,
 			},
 			"create_from_parent": {
 				Description:  "Use to create subnet from parent.",

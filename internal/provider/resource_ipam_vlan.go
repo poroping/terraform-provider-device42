@@ -42,10 +42,11 @@ func resourceIpamVlan() *schema.Resource {
 				Optional:    true,
 			},
 			"tags": {
-				Description: "Tags.",
-				Type:        schema.TypeString,
-				Computed:    true,
-				Optional:    true,
+				Description:      "Tags.",
+				Type:             schema.TypeString,
+				Computed:         true,
+				Optional:         true,
+				DiffSuppressFunc: diffFakeListEqual,
 			},
 			// "tags_or": {
 			// 	Description: "Tags (OR).",
